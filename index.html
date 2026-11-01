@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ASO MOHAMMED - FIB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+/* Layout: one centered column, phone-first — the number is the hero, one big copy button under it */
+:root{
+  --bg:#eaf6ee; --card:#ffffff; --fg:#10261a; --muted:#4f6a5a; --line:#1f9d55;
+  --accent:#1f9d55; --accent-fg:#ffffff; --ok:#147a3f;
+  --display:"Readex Pro","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1a11; --card:#11251a; --fg:#e4f3ea; --muted:#9bbca8; --line:#34c472;
+  --accent:#34c472; --accent-fg:#06140b; --ok:#5ad68f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1a11; --card:#11251a; --fg:#e4f3ea; --muted:#9bbca8; --line:#34c472;
+  --accent:#34c472; --accent-fg:#06140b; --ok:#5ad68f; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:32px;display:flex;justify-content:center;align-items:flex-start}
+main{width:100%;max-width:420px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--card);border:3px solid var(--line);border-radius:20px;padding:28px 22px;
+  display:flex;flex-direction:column;gap:18px;text-align:center}
+.label{font-size:13px;color:var(--muted);letter-spacing:.02em}
+.num{font-family:var(--display);font-weight:700;font-size:clamp(30px,10vw,40px);direction:ltr;
+  font-variant-numeric:tabular-nums;letter-spacing:.04em;user-select:all;-webkit-user-select:all;margin:0}
+button{font-family:var(--display);font-weight:500;font-size:19px;border:0;border-radius:14px;
+  padding:16px;background:var(--accent);color:var(--accent-fg);cursor:pointer;transition:transform .1s, background .2s}
+button:active{transform:scale(.98)}
+button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
+button.done{background:var(--ok)}
+.owner{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.08em;direction:ltr;color:var(--fg);margin-top:-4px}
+.msg{min-height:1.6em;font-weight:500;color:var(--ok)}
+.msg.warn{color:var(--muted);font-weight:400}
+ol{margin:0;padding-inline-start:22px;color:var(--muted);text-align:start;display:flex;flex-direction:column;gap:4px}
+ol b{color:var(--fg);font-weight:500}
+h1{font-family:var(--display);font-size:20px;margin:0;text-wrap:balance;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tag{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:.12em;color:var(--accent);direction:ltr}
+@media (prefers-reduced-motion:reduce){button{transition:none}}
+</style>
+</head>
+<body>
+
+<main>
+  <section class="card">
+    <h1><span class="tag">FIB</span>ادفع بالتحويل على FIB</h1>
+    <div class="label">رقم الحساب</div>
+    <p class="num" id="num">07701677719</p>
+    <button id="copy" type="button">انسخ الرقم</button>
+    <div class="owner">ASO MOHAMMED</div>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+  </section>
+  <section class="card">
+    <ol>
+      <li>اضغط <b>انسخ الرقم</b></li>
+      <li>افتح تطبيق <b>FIB</b> واختار <b>تحويل</b></li>
+      <li>الصق الرقم واكتب المبلغ وأكّد</li>
+    </ol>
+  </section>
+</main>
+
+<script>
+const NUM = "07701677719";
+const btn = document.getElementById("copy"), msg = document.getElementById("msg");
+function ok(){ btn.textContent = "تم نسخ الرقم ✓"; btn.classList.add("done");
+  msg.className = "msg"; msg.textContent = "تم نسخ الرقم، هسه افتح تطبيق FIB والصقه"; }
+function selectNum(){ const r=document.createRange(); r.selectNodeContents(document.getElementById("num"));
+  const s=getSelection(); s.removeAllRanges(); s.addRange(r); }
+function fallback(){
+  try{ selectNum(); if(document.execCommand && document.execCommand("copy")){ ok(); return; } }catch(e){}
+  selectNum(); msg.className="msg warn"; msg.textContent="الرقم محدد، اضغط عليه مطولاً واختار نسخ";
+}
+btn.addEventListener("click", ()=>{
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(NUM).then(ok, fallback);
+  } else fallback();
+});
+</script>
+</body>
+</html>
